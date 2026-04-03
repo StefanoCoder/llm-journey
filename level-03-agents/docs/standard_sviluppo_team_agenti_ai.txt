@@ -1,0 +1,7 @@
+STANDARD DI SVILUPPO - TEAM AGENTI AI
+1. FRONTEND: Utilizzare React.js con Functional Components e Hooks.
+2. STYLING: Utilizzare esclusivamente Tailwind CSS per l'interfaccia (Utility-first).
+3. DATABASE & ORM: Utilizzare Prisma ORM per gestire i modelli di dati e le migrazioni.
+4. BACKEND: Utilizzare Supabase per l'autenticazione, il database PostgreSQL e le Edge Functions.
+5. LINGUAGGIO: Utilizzare TypeScript per garantire la Type Safety su tutto il progetto.
+6. DOCUMENTAZIONE: Ogni componente React deve avere commenti chiari sulle Props utilizzate.
