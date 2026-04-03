@@ -1,0 +1,8 @@
+GUIDA ALLO STILE UI (CONFIGURAZIONE TAILWIND)
+- COLORI PRINCIPALI: Primario 'blue-600', Successo 'green-500', Errore 'red-500', Sfondo 'slate-50'.
+- COMPONENTI STANDARD:
+    - Bottoni: class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700".
+    - Input: class="border border-slate-300 p-2 rounded focus:ring-2 focus:ring-blue-500".
+    - Card: class="p-6 bg-white shadow-sm border border-slate-200 rounded-xl".
+- TIPOGRAFIA: Font Sans-serif (Inter o sistema standard di Tailwind).
+- LAYOUT: Approccio Mobile-first, Grid system a 12 colonne per Desktop.

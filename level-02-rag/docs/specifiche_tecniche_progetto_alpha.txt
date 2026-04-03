@@ -1,0 +1,9 @@
+SPECIFICHE TECNICHE: PROGETTO ALPHA - TASK MANAGER INTELLIGENTE
+- DESCRIZIONE: Web app per la gestione dei task con priorità automatica calcolata via LLM.
+- STACK TECNOLOGICO: Vite + React + Tailwind + Prisma + Supabase.
+- FUNZIONALITÀ CORE:
+    1. Login utente tramite Supabase Auth.
+    2. Creazione task con titolo e descrizione.
+    3. Categorizzazione automatica (Lavoro, Personale, Urgente) tramite API Anthropic/OpenAI.
+    4. Dashboard React per visualizzare i task filtrati.
+- VINCOLI DI BUDGET: Massimo 10€/mese per le chiamate API (Livello 1-2 del PRD).
