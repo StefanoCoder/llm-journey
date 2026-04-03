@@ -3,7 +3,7 @@ from pathlib import Path
 import streamlit as st
 import anthropic
 import chromadb
-from sentence_transformers import SentenceTransformer
+from chromadb.utils.embedding_functions import DefaultEmbeddingFunction
 
 DOCS_DIR = Path(__file__).parent / "docs"
 CHUNK_SIZE = 500
@@ -12,9 +12,11 @@ TOP_K = 3
 
 @st.cache_resource(show_spinner="Caricamento documenti in memoria...")
 def init_rag():
-    model = SentenceTransformer("all-MiniLM-L6-v2")
+    embed_fn = DefaultEmbeddingFunction()
     client_chroma = chromadb.Client()
-    collection = client_chroma.get_or_create_collection("documents")
+    collection = client_chroma.get_or_create_collection(
+        "documents", embedding_function=embed_fn
+    )
 
     docs = list(DOCS_DIR.glob("*.txt")) + list(DOCS_DIR.glob("*.pdf"))
     for doc_path in docs:
@@ -30,21 +32,18 @@ def init_rag():
             chunks.append(" ".join(words[i:i + CHUNK_SIZE]))
             i += CHUNK_SIZE - CHUNK_OVERLAP
 
-        embeddings = model.encode(chunks).tolist()
         ids = [f"{doc_path.stem}_{i}" for i in range(len(chunks))]
         collection.upsert(
             ids=ids,
-            embeddings=embeddings,
             documents=chunks,
             metadatas=[{"source": doc_path.name}] * len(chunks),
         )
 
-    return model, collection
+    return collection
 
-def ask(question: str, model, collection) -> dict:
-    query_embedding = model.encode([question]).tolist()
+def ask(question: str, collection) -> dict:
     results = collection.query(
-        query_embeddings=query_embedding,
+        query_texts=[question],
         n_results=TOP_K,
         include=["documents", "metadatas"],
     )
@@ -75,7 +74,7 @@ st.set_page_config(page_title="RAG Assistant", page_icon="📚")
 st.title("📚 RAG Assistant")
 st.caption("Fai domande sui tuoi documenti")
 
-model, collection = init_rag()
+collection = init_rag()
 
 if "history" not in st.session_state:
     st.session_state.history = []
@@ -93,12 +92,9 @@ if question := st.chat_input("Fai una domanda sui documenti..."):
 
     with st.chat_message("assistant"):
         with st.spinner("Cerco nei documenti..."):
-            result = ask(question, model, collection)
+            result = ask(question, collection)
         st.write(result["answer"])
         st.caption(f"Fonti: {', '.join(result['sources'])}")
-        with st.expander("Chunk recuperati"):
-            for chunk in result["chunks"]:
-                st.text(chunk[:300])
 
     st.session_state.history.append({
         "role": "assistant",
